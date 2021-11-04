@@ -5700,4 +5700,3 @@
    yacc.py:3462:shift/reduce conflict for NUM_INTEIRO in state 171 resolved as shift
    yacc.py:3462:shift/reduce conflict for NUM_PONTO_FLUTUANTE in state 171 resolved as shift
    yacc.py:3462:shift/reduce conflict for NUM_NOTACAO_CIENTIFICA in state 171 resolved as shift
-tppparser.py: 443:Syntax error parsing index rule at line 0
