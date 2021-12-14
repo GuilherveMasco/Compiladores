@@ -382,7 +382,6 @@ def gen_atribuicao_code(node, builder):
         builder.store(expression, var1)
     except:
         builder.store(expression, var1)
-        # builder.store(var_pointer, var1)
 
 
 def gen_se_code(node, builder, type_func, func):
@@ -468,11 +467,6 @@ def gen_repita_code(node, builder, type_func, func):
     lopp_val = builder.append_basic_block('loop_val')
     loop_end = builder.append_basic_block('loop_end')
 
-    # if type_comparation == '==':
-    #     builder.cbranch(builder.not_(expression), loop, loop_end)
-    # else:
-    #     builder.cbranch(expression, loop, loop_end)
-    # builder.position_at_end(loop)
     builder.branch(loop)
 
     builder.position_at_end(loop)
@@ -501,10 +495,6 @@ def gen_repita_code(node, builder, type_func, func):
         builder.cbranch(expression, loop_end, loop)
     else:
         builder.cbranch(expression, loop, loop_end)
-    # builder.position_at_end(loop)
-
-    # expression = builder.icmp_signed(type_comparation, comparation_list[0], var_comper, name='expression')
-    # builder.cbranch(builder.not_(expression), loop, loop_end)
     builder.position_at_end(loop_end)
 
 
@@ -577,9 +567,7 @@ def declare_functions(node):
         name_func = node.children[-2].name
 
     escopo = name_func
-    # Declara o tipo do retorno da função.
     func_return_type = getTypeLVM(type_func)
-    # Cria a função.
     list_param_func = list()
     for var_param in func_list[name_func][0][3]:
         for var in var_list[var_param]:
@@ -588,7 +576,6 @@ def declare_functions(node):
 
     t_func = ir.FunctionType(func_return_type, list_param_func)
 
-    # Declara a função.
     if name_func == 'principal':
         func = ir.Function(module, t_func, name='main')
     else:
@@ -600,10 +587,8 @@ def declare_functions(node):
             list_var[name_func] = []
         list_var[name_func].append({func_list[name_func][0][3][index]: func.args[index]})
 
-    # Declara o bloco de  inicio.
     entry_block = func.append_basic_block('entry')
 
-    # Adiciona o bloco de entrada.
     builder = ir.IRBuilder(entry_block)
 
     for element in var_list:
@@ -615,23 +600,18 @@ def declare_functions(node):
     process_tree(node, builder, type_func, func)
 
     if not func_exit:
-        # Declara o bloco de fim.
         end_basic_block = func.append_basic_block('exit')
-        # Cria um salto para o bloco de saída
+
         builder.branch(end_basic_block)
 
-        # Adiciona o bloco de saida
         builder.position_at_end(end_basic_block)
 
         if type_func != 'vazio':
-            # Cria um valor zero para colocar no retorno.
             Zero64 = ir.Constant(func_return_type, 0)
 
-            # Cria o valor de retorno e inicializa com zero.
             returnVal = builder.alloca(func_return_type, name='retorno')
             builder.store(Zero64, returnVal)
 
-            # Cria o return
             returnVal_temp = builder.load(returnVal, name='ret_temp', align=4)
             builder.ret(returnVal_temp)
         else:
